@@ -1,16 +1,15 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request, render_template, jsonify, Blueprint
 import get_orgs
 import requests
 import ast
 
 
 
-app = Flask(__name__)
+api_call = Blueprint('api_call', __name__)
 
 query = "black transmens inc" #would come from requests.args
 
-@app.route('/backend/search', methods=['GET', 'POST'])
+@api_call.route('/backend/search', methods=['GET', 'POST'])
 def search_data():
 
     # Assuming the request is coming from an AJAX call
@@ -37,7 +36,7 @@ def search_data():
 
 
 
-@app.route('/backend/get_pdf', methods=['GET', 'POST'])
+@api_call.route('/backend/get_pdf', methods=['GET', 'POST'])
 def get_pdf():
 
     # Gets value of term user sent in

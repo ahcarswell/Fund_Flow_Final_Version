@@ -1,9 +1,10 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, Blueprint
 from firebase import firebase
 
 firebase = firebase.FirebaseApplication("https://fundflow-team3.firebaseio.com/", None)
 result = firebase.get("/fundflow-team3/Users", '')
 
+accounts = Blueprint('accounts', __name__)
 
 def user_info():
     return result
@@ -23,7 +24,7 @@ def get_email_list():
     return email_list
 
 # Can change the route name
-@app.route('/backend/create_account', methods=['GET', 'POST'])
+@accounts.route('/backend/create_account', methods=['GET', 'POST'])
 def create_account():
     # Assuming the method is post
     # This gets the data sent over from an ajax call (if that's what's being used)
@@ -75,7 +76,7 @@ def create_account():
         return render_template("dashboard.html", user_info=data["username"])
 
 
-@app.route('/backend/login', methods=['GET', 'POST'])
+@accounts.route('/backend/login', methods=['GET', 'POST'])
 def login():
     # Assuming the method is post
     # This gets the data sent over from an ajax call (if that's what's being used)
