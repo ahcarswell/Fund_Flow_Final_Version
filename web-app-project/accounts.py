@@ -9,19 +9,25 @@ accounts = Blueprint('accounts', __name__)
 def user_info():
     return result
 
-
 def get_user_list():
     user_list = []
-    for key in result:
-        user_list.append(key["username"])
+    for k, v in result.items():
+        if isinstance(v, dict):
+            user_list.append(v["username"])
+
     return user_list
+
 
 
 def get_email_list():
     email_list = []
-    for key in result:
-        email_list.append(key["email"])
+    for k, v in result.items():
+        if isinstance(v, dict):
+            email_list.append(v["email"])
+
     return email_list
+
+
 
 # Can change the route name
 @accounts.route('/backend/create_account', methods=['GET', 'POST'])
@@ -73,7 +79,8 @@ def create_account():
 
         donations_result = firebase.post('/fundflow-team3/past_donations', donations_set_up)
         # Based on a route to a dashboard that is specific to the user
-        return render_template("dashboard.html", user_info=data["username"])
+       # return render_template("dashboard.html", user_info=data["username"])
+        return jsonify(data=data)
 
 
 @accounts.route('/backend/login', methods=['GET', 'POST'])
@@ -89,8 +96,15 @@ def login():
             "success": False
         }
         return jsonify(response=response)
-    elif data["password"] == full_dict[data["username"]]:
-        return render_template("dashboard.html", user=data["username"])
+
+    for k, v in result.items():
+        if isinstance(v, dict) and v["username"] == data["username"]:
+            if v["password"] == data["password"]:
+                data = {"message" : "login successful"}
+                return jsonify(data=data)
+                #elif data["password"] == full_dict[data["username"]]:
+
+        #return render_template("dashboard.html", user=data["username"])
         # Does full_dict check everything at once? #full dict gets all the users in our database
     else:
         response = {

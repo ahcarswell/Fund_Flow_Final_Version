@@ -29,10 +29,13 @@ def search_data():
                 "name": search_term
             }
 
-            return render_template('search.html', data=org_data)
+            return jsonify(data=org_data)
+            # return render_template('search.html', data=org_data)
+
 
         org_data = {}
-        return render_template('search.html', data=org_data)
+        return jsonify(data=org_data)
+        #return render_template('search.html', data=org_data)
 
 
 
@@ -44,7 +47,7 @@ def get_pdf():
         json_data = request.get_json()
         ein = json_data["ein"]
 
-        search = "https://projects.propublica.org/nonprofits/api/v2/organizations/" + ein + ".json"
+        search = "https://projects.propublica.org/nonprofits/api/v2/organizations/" + str(ein) + ".json"
         response = requests.get(search).json()
         url = response["filings_with_data"][0]["pdf_url"]
 
