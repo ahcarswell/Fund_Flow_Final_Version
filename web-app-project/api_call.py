@@ -17,7 +17,7 @@ def search_data():
     if request.method == "POST":
         json_data = request.get_json()
         # Value in the dict could be labeled differently
-        search_term = json_data["search_term"]
+        search_term = lower(json_data["search_term"])
 
         if search_term in get_orgs.org_list():
             org_index = get_orgs.org_list().index(search_term)
